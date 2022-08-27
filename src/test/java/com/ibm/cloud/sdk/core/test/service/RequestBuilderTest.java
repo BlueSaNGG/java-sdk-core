@@ -27,7 +27,7 @@ import java.util.Map;
 
 import org.testng.annotations.Test;
 
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import com.ibm.cloud.sdk.core.http.HttpMediaType;
 import com.ibm.cloud.sdk.core.http.RequestBuilder;
 import com.ibm.cloud.sdk.core.test.TestUtils;
@@ -232,8 +232,11 @@ public class RequestBuilderTest {
     final RequestBody requestedBody = request.body();
     final Buffer buffer = new Buffer();
     requestedBody.writeTo(buffer);
+    
+    JsonElement listOfModelsToJson = JsonParser.parseString(GsonSingleton.getGsonWithoutPrettyPrinting().toJson(listOfModels));
+    JsonElement bufferToJson = JsonParser.parseString(buffer.readUtf8());
 
-    assertEquals(GsonSingleton.getGsonWithoutPrettyPrinting().toJson(listOfModels), buffer.readUtf8());
+    assertEquals(listOfModelsToJson, bufferToJson);
     assertEquals(HttpMediaType.JSON, requestedBody.contentType());
   }
 
